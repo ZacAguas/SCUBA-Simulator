@@ -5432,6 +5432,7 @@ GameObject:
   - component: {fileID: 1945425226}
   - component: {fileID: 1945425225}
   - component: {fileID: 1945425227}
+  - component: {fileID: 1945425228}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -5542,7 +5543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onBecomeNarced: {fileID: 11400000, guid: f9045f3c10b67461b8e08505a4991371, type: 2}
   seaLevel: {fileID: 637147857}
-  narcosisThreshold: 30
+  narcosisAirThreshold: 0
 --- !u!114 &1945425226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5567,10 +5568,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75cc163046e14ad3b2092cc6f7528d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedGasMix: 0
+  oxygenPercentage: 0
+  nitrogenPercentage: 0
+  heliumPercentage: 0
   maxTankPressure: 200
   lowTankPercentageThreshold: 0.33
   onLowTankPressure: {fileID: 11400000, guid: 4acdf39d28a37487599f792e860627b6, type: 2}
   onOutOfAir: {fileID: 11400000, guid: dea808027cd2d4bc0932e05e705df374, type: 2}
+--- !u!114 &1945425228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945425220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17625a61d15342479be1f67779ceb650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 0}
+  response:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2022851699
 GameObject:
   m_ObjectHideFlags: 0
