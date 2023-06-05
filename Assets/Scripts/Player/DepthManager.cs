@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(TankController))] // for END
 public class DepthManager : MonoBehaviour
 {
     private TankController tankController;
@@ -42,7 +43,8 @@ public class DepthManager : MonoBehaviour
 
     private void CalculateEquivalentNarcoticDepth()
     {
-        equivalentNarcoticDepth = Depth * (tankController.nitrogenPercentage + 2 * tankController.heliumPercentage);
+        if (tankController.heliumPercentage > 0) // ie.
+            equivalentNarcoticDepth = Depth * (tankController.nitrogenPercentage + 2 * tankController.heliumPercentage);    
     }
 
     private void CheckNarcosis()
@@ -59,6 +61,8 @@ public class DepthManager : MonoBehaviour
     private void FixedUpdate() // for physics calculations
     {
         CalculateDepth();
+        CalculateEquivalentNarcoticDepth();
+        Debug.Log(equivalentNarcoticDepth);
         CheckNarcosis();
 
 

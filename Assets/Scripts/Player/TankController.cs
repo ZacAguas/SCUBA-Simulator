@@ -7,7 +7,7 @@ public class TankController : MonoBehaviour
 {
     public float CurrentTankPressure {
         get => currentTankPressure;
-        private set => Mathf.Max(0, currentTankPressure);
+        private set => Mathf.Max(0, value);
     }
     private float currentTankPressure; // backing field, should have no usages, use property instead
 
@@ -21,6 +21,7 @@ public class TankController : MonoBehaviour
         Trimix10_70
     }
     [SerializeField] private GasMix selectedGasMix;
+    public GasMix GetGasMix() => selectedGasMix;
     public float oxygenPercentage;
     public float nitrogenPercentage;
     public float heliumPercentage;
