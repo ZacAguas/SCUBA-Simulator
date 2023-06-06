@@ -30,7 +30,7 @@ public class DepthManager : MonoBehaviour
         CalculateDepth();
         prevDepth = Depth;
         playerNarced = false;
-        
+
         CalculateEquivalentNarcoticDepth(); // careful with script execution order (percentages must be calculated in tank controller before this)
         
         Debug.Log("Start depth: " + Depth);
@@ -43,26 +43,34 @@ public class DepthManager : MonoBehaviour
 
     private void CalculateEquivalentNarcoticDepth()
     {
-        if (tankController.heliumPercentage > 0) // ie.
-            equivalentNarcoticDepth = Depth * (tankController.nitrogenPercentage + 2 * tankController.heliumPercentage);    
+        if (tankController.heliumPercentage > 0) // only for tri mix
+            equivalentNarcoticDepth = (Depth + 10) * (1 - tankController.heliumPercentage) - 10; // formula: (depth+10)*(1-fraction of helium) - 10
+        else
+            equivalentNarcoticDepth = Depth;
     }
 
     private void CheckNarcosis()
     {
-        if (Depth >= narcosisAirThreshold) // raise narced event if past threshold and not already narced
+        if (equivalentNarcoticDepth >= narcosisAirThreshold) // raise narced event if past threshold and not already narced
         {
             if (!playerNarced) // only invoke if not already narced
+            {
                 onBecomeNarced.Invoke(); // do I need to check if this is null?
+                Debug.Log("invoke narced event");
+            }
             playerNarced = true;
+            Debug.Log("Player narced");
         }
         else
+        {
             playerNarced = false;
+            Debug.Log("Player not narced");
+        }
     }
     private void FixedUpdate() // for physics calculations
     {
         CalculateDepth();
         CalculateEquivalentNarcoticDepth();
-        Debug.Log(equivalentNarcoticDepth);
         CheckNarcosis();
 
 
