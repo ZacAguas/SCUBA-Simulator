@@ -1,15 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class TankController : MonoBehaviour
 {
+    private DepthManager depthManager;
+    
     public float CurrentTankPressure {
         get => currentTankPressure;
-        private set => Mathf.Max(0, value);
+        private set => currentTankPressure = Mathf.Max(0, value);
     }
     private float currentTankPressure; // backing field, should have no usages, use property instead
+
+    // Air consumption fields
+    public float Exertion
+    {
+        get => exertion;
+        set => exertion = Mathf.Clamp01(value);
+    } // multiplier used that increases air consumption, ranges from restingExertion to 1.0 (ie. 100%)
+    private float exertion; // backing field
+    [SerializeField] private float restingExertion; // default exertion value
+    [SerializeField] private float cylinderVolume; // volume of cylinder in litres (normally 12 or 15)
+    [SerializeField] private float sac; // average sac rate (15-18 litres/min for experienced divers)
+    
 
     public enum GasMix
     {
@@ -28,14 +43,27 @@ public class TankController : MonoBehaviour
 
     [SerializeField] private float maxTankPressure; // max pressure of tank in bar
     [SerializeField] private float lowTankPercentageThreshold;  // point at which air in tank is considered 'low' eg. 0.33 = rule of thirds
-    
+    [SerializeField] private float tankUpdateInterval;  // how frequently the tank pressure is updated/checked (in seconds)
+
     [SerializeField] private GameEvent onLowTankPressure; // triggered when tank reaches 'low' threshold
     [SerializeField] private GameEvent onOutOfAir; // triggered when tank reaches 0
+    private bool isLowTankPressure;
+    private bool isOutOfAir;
+
+    private void Awake()
+    {
+        depthManager = GetComponent<DepthManager>();
+    }
 
     private void Start()
     {
         CurrentTankPressure = maxTankPressure;
+        Exertion = restingExertion;
         InitialiseGasMix();
+        
+        // Update/check pressure repeatedly
+        InvokeRepeating(nameof(UpdateTankPressure), tankUpdateInterval,  tankUpdateInterval);
+        InvokeRepeating(nameof(CheckTankPressure), tankUpdateInterval,  tankUpdateInterval);
     }
 
     private void InitialiseGasMix()
@@ -76,16 +104,39 @@ public class TankController : MonoBehaviour
     }
     private void CheckTankPressure()
     {
-        if (CurrentTankPressure <= maxTankPressure * lowTankPercentageThreshold) // we have 'low' pressure
+        if (!isLowTankPressure && CurrentTankPressure <= maxTankPressure * lowTankPercentageThreshold) // we have 'low' pressure for the first time
+        {
             onLowTankPressure.Invoke(); // raise low pressure event
+            isLowTankPressure = true;
+        }
 
-        if (CurrentTankPressure == 0)
+        if (!isOutOfAir && CurrentTankPressure == 0) // we are out of air for the first time
+        {
             onOutOfAir.Invoke();
+            isOutOfAir = true;
+        }
+    }
 
-    }
-    private void FixedUpdate()
+    private void UpdateTankPressure()
     {
-        CheckTankPressure();
+        // reduce tank based on exertion and air consumption rate
+        CurrentTankPressure -= CalculateConsumption();
     }
-    
+
+    private float CalculateConsumption()
+    {
+        // NOTE: ATA not to be confused with ATM, ATA is ATM+1 because it takes into account the ambient pressure at sea level
+        float pressure = (depthManager.Depth + 10) / 10 ; // absolute atmospheric pressure ie. 1ATA at 0m, 2ATA at 10m
+        float intervalAdjustedSAC = (sac / 60) * tankUpdateInterval; // SAC adjusted for update interval in secs instead of per minute
+        float exertionAdjustedSAC;
+        if (restingExertion != 0)
+            exertionAdjustedSAC = (intervalAdjustedSAC / restingExertion) * Exertion; // surface air consumption adjusted for exertion multiplier
+        else
+            exertionAdjustedSAC = 0;
+
+        float gasConsumed = exertionAdjustedSAC * pressure;
+        float pressureUsed = gasConsumed / cylinderVolume;
+        
+        return pressureUsed;
+    }
 }

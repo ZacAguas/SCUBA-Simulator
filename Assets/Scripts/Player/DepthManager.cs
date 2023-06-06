@@ -59,12 +59,10 @@ public class DepthManager : MonoBehaviour
                 Debug.Log("invoke narced event");
             }
             playerNarced = true;
-            Debug.Log("Player narced");
         }
         else
         {
             playerNarced = false;
-            Debug.Log("Player not narced");
         }
     }
     private void FixedUpdate() // for physics calculations
