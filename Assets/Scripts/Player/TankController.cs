@@ -45,6 +45,7 @@ public class TankController : MonoBehaviour
     [SerializeField] private float lowTankPercentageThreshold;  // point at which air in tank is considered 'low' eg. 0.33 = rule of thirds
     [SerializeField] private float tankUpdateInterval;  // how frequently the tank pressure is updated/checked (in seconds)
 
+    [SerializeField] private GameEvent onPublishStats; // called every time the new tank pressure etc. is generated
     [SerializeField] private GameEvent onLowTankPressure; // triggered when tank reaches 'low' threshold
     [SerializeField] private GameEvent onOutOfAir; // triggered when tank reaches 0
     private bool isLowTankPressure;
@@ -64,6 +65,7 @@ public class TankController : MonoBehaviour
         // Update/check pressure repeatedly
         InvokeRepeating(nameof(UpdateTankPressure), tankUpdateInterval,  tankUpdateInterval);
         InvokeRepeating(nameof(CheckTankPressure), tankUpdateInterval,  tankUpdateInterval);
+        InvokeRepeating(nameof(PublishStats), tankUpdateInterval,  tankUpdateInterval);
     }
 
     private void InitialiseGasMix()
@@ -101,6 +103,11 @@ public class TankController : MonoBehaviour
                 heliumPercentage = 0.7f;
                 break;
         }
+    }
+
+    private void PublishStats()
+    {
+        
     }
     private void CheckTankPressure()
     {

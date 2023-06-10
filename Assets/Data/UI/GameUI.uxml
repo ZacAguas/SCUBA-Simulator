@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); opacity: 1; align-items: stretch;">
-        <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.24); margin-left: 500px; margin-right: 0; margin-top: 250px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; border-top-color: rgba(0, 0, 0, 0.39); border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px; border-left-color: rgba(0, 0, 0, 0.39); border-top-left-radius: 30px; border-bottom-left-radius: 30px; border-top-right-radius: 30px; border-bottom-right-radius: 30px; border-right-color: rgba(0, 0, 0, 0.39); border-bottom-color: rgba(0, 0, 0, 0.39);">
-            <ui:ProgressBar value="22" name="Pressure" style="-unity-slice-left: 0; -unity-slice-top: 0; -unity-slice-right: 0; -unity-slice-bottom: 0;" />
-            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" />
-        </ui:VisualElement>
-    </ui:VisualElement>
-</ui:UXML>
