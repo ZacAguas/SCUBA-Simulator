@@ -4569,6 +4569,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PressureGauge
       objectReference: {fileID: 0}
+    - target: {fileID: 5671767622644989680, guid: b72de8302e936442aa3add9665b0dcf1,
+        type: 3}
+      propertyPath: numLabels
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6238498953461164467, guid: b72de8302e936442aa3add9665b0dcf1,
         type: 3}
       propertyPath: m_RootOrder
@@ -4592,7 +4597,7 @@ PrefabInstance:
     - target: {fileID: 6238498953461164467, guid: b72de8302e936442aa3add9665b0dcf1,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1674
+      value: 0.141
       objectReference: {fileID: 0}
     - target: {fileID: 6238498953461164467, guid: b72de8302e936442aa3add9665b0dcf1,
         type: 3}
@@ -4602,7 +4607,7 @@ PrefabInstance:
     - target: {fileID: 6238498953461164467, guid: b72de8302e936442aa3add9665b0dcf1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.609
+      value: 0.557
       objectReference: {fileID: 0}
     - target: {fileID: 6238498953461164467, guid: b72de8302e936442aa3add9665b0dcf1,
         type: 3}
@@ -4642,7 +4647,15 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 487849697898476476, guid: b72de8302e936442aa3add9665b0dcf1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 7436990643701354625, guid: b72de8302e936442aa3add9665b0dcf1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: b72de8302e936442aa3add9665b0dcf1, type: 3}
 --- !u!1 &1522836589
 GameObject:
