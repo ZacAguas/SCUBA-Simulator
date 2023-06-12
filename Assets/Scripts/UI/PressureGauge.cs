@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Searcher;
 using UnityEngine;
 
 public class PressureGauge : MonoBehaviour
@@ -66,9 +65,8 @@ public class PressureGauge : MonoBehaviour
             TextMeshPro labelText = label.transform.Find("Label").GetComponent<TextMeshPro>();
             labelText.text = Mathf.RoundToInt(normalisedLabelPressure * maxPressure).ToString();
             var textAngles = labelText.transform.localEulerAngles;
+
             labelText.transform.localEulerAngles = new Vector3(textAngles.x , textAngles.y + labelAngle, textAngles.z); // un-rotate labels
-            if (i < numLabels / 2) // on the left side of the dial
-                labelText.alignment = TextAlignmentOptions.Left;
             label.SetActive(true);
         }
         
