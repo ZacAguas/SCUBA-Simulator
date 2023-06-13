@@ -4574,6 +4574,11 @@ PrefabInstance:
       propertyPath: numLabels
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 5671767622644989680, guid: b72de8302e936442aa3add9665b0dcf1,
+        type: 3}
+      propertyPath: tankController
+      value: 
+      objectReference: {fileID: 1945425227}
     - target: {fileID: 6238498953461164467, guid: b72de8302e936442aa3add9665b0dcf1,
         type: 3}
       propertyPath: m_RootOrder
@@ -6150,6 +6155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75cc163046e14ad3b2092cc6f7528d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <MaxTankPressure>k__BackingField: 200
   restingExertion: 0.5
   cylinderVolume: 12
   sac: 20
@@ -6157,7 +6163,6 @@ MonoBehaviour:
   oxygenPercentage: 0
   nitrogenPercentage: 0
   heliumPercentage: 0
-  maxTankPressure: 200
   lowTankPercentageThreshold: 0.33
   tankUpdateInterval: 1
   onPublishStats: {fileID: 0}

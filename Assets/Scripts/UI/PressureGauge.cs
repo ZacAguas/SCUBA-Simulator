@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PressureGauge : MonoBehaviour
 {
+    [SerializeField] private TankController tankController;
+    
     [SerializeField] private GameObject needle;
     [SerializeField] private GameObject labelTemplate;
     [SerializeField] private int numLabels;
@@ -16,9 +18,6 @@ public class PressureGauge : MonoBehaviour
     private float totalAngleRange;
 
 
-    private float maxPressure;
-    private float currentPressure;
-
     private void Awake()
     {
         labelTemplate.SetActive(false);
@@ -27,26 +26,18 @@ public class PressureGauge : MonoBehaviour
     private void Start()
     {
         var localEulerAngles = needle.transform.localEulerAngles;
-        // for some reason the rotation is off
+        // rotation is off in the prefab?
         startingRotation = new Vector3(localEulerAngles.x, localEulerAngles.y - 90, localEulerAngles.z + 90);
         
         maxPressureAngle = startingRotation.y + 120f;
         zeroPressureAngle = startingRotation.y - 120f;
         totalAngleRange = maxPressureAngle - zeroPressureAngle;
-        currentPressure = maxPressure;
-        
-        // for testing
-        maxPressure = 200;
-        currentPressure = 200;
         
         CreateLabels();
     }
 
     private void Update()
     {
-        currentPressure -= 30 * Time.deltaTime;
-        if (currentPressure < 0)
-            currentPressure = maxPressure;
         needle.transform.localEulerAngles = new Vector3(GetPressureRotation(), startingRotation.y, startingRotation.z);
     }
 
@@ -63,7 +54,7 @@ public class PressureGauge : MonoBehaviour
 
             // gross hardcoded value NOTE: LABEL MUST BE CALLED "Label" in template
             TextMeshPro labelText = label.transform.Find("Label").GetComponent<TextMeshPro>();
-            labelText.text = Mathf.RoundToInt(normalisedLabelPressure * maxPressure).ToString();
+            labelText.text = Mathf.RoundToInt(normalisedLabelPressure * tankController.MaxTankPressure).ToString();
             var textAngles = labelText.transform.localEulerAngles;
 
             labelText.transform.localEulerAngles = new Vector3(textAngles.x , textAngles.y + labelAngle, textAngles.z); // un-rotate labels
@@ -74,7 +65,7 @@ public class PressureGauge : MonoBehaviour
     
     private float GetPressureRotation()
     {
-        float normalisedPressure = currentPressure / maxPressure; // normalise so gives a value between 0 and 1
+        float normalisedPressure = tankController.CurrentTankPressure / tankController.MaxTankPressure; // normalise so gives a value between 0 and 1
         return zeroPressureAngle + normalisedPressure * totalAngleRange;
     }
 

@@ -14,6 +14,9 @@ public class TankController : MonoBehaviour
     }
     private float currentTankPressure; // backing field, should have no usages, use property instead
 
+    [field: SerializeField] public float MaxTankPressure { get; private set; } // max pressure of tank in bar
+
+
     // Air consumption fields
     public float Exertion
     {
@@ -41,9 +44,10 @@ public class TankController : MonoBehaviour
     public float nitrogenPercentage;
     public float heliumPercentage;
 
-    [SerializeField] private float maxTankPressure; // max pressure of tank in bar
     [SerializeField] private float lowTankPercentageThreshold;  // point at which air in tank is considered 'low' eg. 0.33 = rule of thirds
     [SerializeField] private float tankUpdateInterval;  // how frequently the tank pressure is updated/checked (in seconds)
+    public WaitForSeconds TankUpdateWaitForSeconds { get; private set; }
+    
 
     [SerializeField] private GameEvent onPublishStats; // called every time the new tank pressure etc. is generated
     [SerializeField] private GameEvent onLowTankPressure; // triggered when tank reaches 'low' threshold
@@ -54,18 +58,17 @@ public class TankController : MonoBehaviour
     private void Awake()
     {
         depthManager = GetComponent<DepthManager>();
+        TankUpdateWaitForSeconds = new WaitForSeconds(tankUpdateInterval); // cache the wait for seconds based on the update interval
     }
 
     private void Start()
     {
-        CurrentTankPressure = maxTankPressure;
+        CurrentTankPressure = MaxTankPressure;
         Exertion = restingExertion;
         InitialiseGasMix();
         
         // Update/check pressure repeatedly
-        InvokeRepeating(nameof(UpdateTankPressure), tankUpdateInterval,  tankUpdateInterval);
-        InvokeRepeating(nameof(CheckTankPressure), tankUpdateInterval,  tankUpdateInterval);
-        InvokeRepeating(nameof(PublishStats), tankUpdateInterval,  tankUpdateInterval);
+        StartCoroutine(TankPressure());
     }
 
     private void InitialiseGasMix()
@@ -105,13 +108,9 @@ public class TankController : MonoBehaviour
         }
     }
 
-    private void PublishStats()
-    {
-        
-    }
     private void CheckTankPressure()
     {
-        if (!isLowTankPressure && CurrentTankPressure <= maxTankPressure * lowTankPercentageThreshold) // we have 'low' pressure for the first time
+        if (!isLowTankPressure && CurrentTankPressure <= MaxTankPressure * lowTankPercentageThreshold) // we have 'low' pressure for the first time
         {
             onLowTankPressure.Invoke(); // raise low pressure event
             isLowTankPressure = true;
@@ -123,13 +122,11 @@ public class TankController : MonoBehaviour
             isOutOfAir = true;
         }
     }
-
     private void UpdateTankPressure()
     {
         // reduce tank based on exertion and air consumption rate
         CurrentTankPressure -= CalculateConsumption();
     }
-
     private float CalculateConsumption()
     {
         // NOTE: ATA not to be confused with ATM, ATA is ATM+1 because it takes into account the ambient pressure at sea level
@@ -145,5 +142,15 @@ public class TankController : MonoBehaviour
         float pressureUsed = gasConsumed / cylinderVolume;
         
         return pressureUsed;
+    }
+
+    private IEnumerator TankPressure()
+    {
+        while (true)
+        {
+            UpdateTankPressure();
+            CheckTankPressure();
+            yield return TankUpdateWaitForSeconds;
+        }
     }
 }
