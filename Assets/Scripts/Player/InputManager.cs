@@ -1,18 +1,47 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private float leftRightInput;
+    private float forwardBackInput;
+    private float upDownInput;
+    private float inflateDeflateInput;
+    private float mouseX;
+    private float mouseY;
+
+    private void Start()
     {
-        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        leftRightInput = Input.GetAxis("Horizontal");
+        forwardBackInput = Input.GetAxis("Vertical");
+        upDownInput = Input.GetAxis("Ascend");
+        inflateDeflateInput = Input.GetAxis("BCD");
+
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
     }
+
+    public Vector3 GetSwimInput()
+    {
+        return new Vector3(leftRightInput, upDownInput, forwardBackInput);
+    }
+
+    public Vector2 GetMouseInput()
+    {
+        return new Vector2(mouseX, mouseY);
+    }
+
+    public float GetBCDInput()
+    {
+        return inflateDeflateInput;
+    }
+
 }

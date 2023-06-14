@@ -6016,6 +6016,8 @@ GameObject:
   - component: {fileID: 1945425223}
   - component: {fileID: 1945425222}
   - component: {fileID: 1945425221}
+  - component: {fileID: 1945425229}
+  - component: {fileID: 1945425228}
   - component: {fileID: 1945425226}
   - component: {fileID: 1945425225}
   - component: {fileID: 1945425227}
@@ -6143,6 +6145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d3a5e80d2824483a9b3b36d1f407435, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseSensitivity: 100
+  clampVerticalLook: 0
 --- !u!114 &1945425227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6168,6 +6172,45 @@ MonoBehaviour:
   onPublishStats: {fileID: 0}
   onLowTankPressure: {fileID: 11400000, guid: 4acdf39d28a37487599f792e860627b6, type: 2}
   onOutOfAir: {fileID: 11400000, guid: dea808027cd2d4bc0932e05e705df374, type: 2}
+--- !u!114 &1945425228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945425220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdae751bc32ad416383f4dd4be5a9702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &1945425229
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945425220}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2022851699
 GameObject:
   m_ObjectHideFlags: 0
