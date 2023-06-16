@@ -31,7 +31,7 @@ public class InputManager : MonoBehaviour
 
     public Vector3 GetSwimInput()
     {
-        return new Vector3(leftRightInput, upDownInput, forwardBackInput);
+        return new Vector3(leftRightInput, upDownInput, forwardBackInput).normalized;
     }
 
     public Vector2 GetMouseInput()
