@@ -130,7 +130,6 @@ public class TankController : MonoBehaviour
     private float CalculateConsumption()
     {
         // NOTE: ATA not to be confused with ATM, ATA is ATM+1 because it takes into account the ambient pressure at sea level
-        float pressure = (depthManager.Depth + 10) / 10 ; // absolute atmospheric pressure ie. 1ATA at 0m, 2ATA at 10m
         float intervalAdjustedSAC = (sac / 60) * tankUpdateInterval; // SAC adjusted for update interval in secs instead of per minute
         float exertionAdjustedSAC;
         if (restingExertion != 0)
@@ -138,7 +137,7 @@ public class TankController : MonoBehaviour
         else
             exertionAdjustedSAC = 0;
 
-        float gasConsumed = exertionAdjustedSAC * pressure;
+        float gasConsumed = exertionAdjustedSAC * depthManager.PressureAbsolute;
         float pressureUsed = gasConsumed / cylinderVolume;
         
         return pressureUsed;

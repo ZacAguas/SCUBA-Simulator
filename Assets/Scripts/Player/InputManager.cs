@@ -23,7 +23,7 @@ public class InputManager : MonoBehaviour
         leftRightInput = Input.GetAxis("Horizontal");
         forwardBackInput = Input.GetAxis("Vertical");
         upDownInput = Input.GetAxis("Ascend");
-        inflateDeflateInput = Input.GetAxis("BCD");
+        inflateDeflateInput = Input.GetAxisRaw("BCD"); // raw input to prevent smoothing
 
         mouseX = Input.GetAxis("Mouse X");
         mouseY = Input.GetAxis("Mouse Y");

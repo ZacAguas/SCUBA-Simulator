@@ -10,7 +10,8 @@ public class DepthManager : MonoBehaviour
     private TankController tankController;
     
     public float Depth { get; private set; }
-    
+    public float PressureAbsolute => (Depth + 10) / 10; // absolute atmospheric pressure ie. 1ATA at 0m, 2ATA at 10m
+
     private float prevDepth;
     private bool playerNarced = false;
     
@@ -34,6 +35,20 @@ public class DepthManager : MonoBehaviour
         CalculateEquivalentNarcoticDepth(); // careful with script execution order (percentages must be calculated in tank controller before this)
         
         Debug.Log("Start depth: " + Depth);
+    }
+    private void FixedUpdate() // for physics calculations
+    {
+        CalculateDepth();
+        CalculateEquivalentNarcoticDepth();
+        CheckNarcosis();
+
+
+        prevDepth = Depth; // keep track of the depth last frame
+    }
+    
+    public float GetVolumeAtPressureATA(float volumeAtSurface)
+    {
+        return volumeAtSurface / PressureAbsolute;
     }
 
     private void CalculateDepth()
@@ -65,16 +80,6 @@ public class DepthManager : MonoBehaviour
             playerNarced = false;
         }
     }
-    private void FixedUpdate() // for physics calculations
-    {
-        CalculateDepth();
-        CalculateEquivalentNarcoticDepth();
-        CheckNarcosis();
 
-
-        prevDepth = Depth; // keep track of the depth last frame
-    }
-
-
-    // careful updating depth on update or fixed update for physics
+    
 }

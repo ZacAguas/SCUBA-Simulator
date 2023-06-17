@@ -17,15 +17,22 @@ public class PlayerController : MonoBehaviour
     
     // world
     private const float waterDensity = 1030; // in kg/m^3
-    
+    private const float gravity = 9.81f; // acceleration due to gravity in m/s^2
     // body
+    public float totalMass => bodyMass + equipmentMass;
     [SerializeField] private float bodyMass; // in kg
+    [SerializeField] private float equipmentMass; // in kg
     private float bodyVolume; // in cubic meters
     // BCD
-    [SerializeField] private float maxSurfaceBCDVolume;
-    private float currentBCDVolume;
-
-
+    [SerializeField] private float maxSurfaceBCDVolume; // in m^3
+    [SerializeField] private float inflateSpeed;
+    private float normalisedCurrentBCDVolume; // 0 = fully deflated, 1 = fully inflated
+    public float CurrentBCDVolume
+    {
+        get => depthManager.GetVolumeAtPressureATA(normalisedCurrentBCDVolume * maxSurfaceBCDVolume);  // current volume w.r.t pressure at current depth
+        set => currentBCDVolume = Mathf.Min(depthManager.GetVolumeAtPressureATA(maxSurfaceBCDVolume), value);
+    }
+    private float currentBCDVolume; // backing field, don't use
 
     private float yMouseRotation;
     private float xMouseRotation;
@@ -39,6 +46,8 @@ public class PlayerController : MonoBehaviour
 
         rb.mass = bodyMass;
         bodyVolume = CalculateBodyVolume();
+        normalisedCurrentBCDVolume = 1; // start fully inflated
+        Debug.Log("Body volume: " + bodyVolume);
     }
 
     private void Start()
@@ -53,6 +62,10 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         SwimMovement();
+        AdjustBCD();
+        Debug.Log("current BCD volume: " + CurrentBCDVolume);
+        // Debug.Log("normalised: " + normalisedCurrentBCDVolume);
+        ApplyBuoyancy();
     }
 
     private void MouseMovement()
@@ -67,12 +80,20 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(xMouseRotation, yMouseRotation, 0);
     }
 
-    private void Buoyancy()
+    private void AdjustBCD()
     {
-        float gravity = Mathf.Abs(Physics.gravity.y);
-        float totalVolume = currentBCDVolume + bodyVolume;
+        float input = inputManager.GetBCDInput();
+
+        float targetNormalisedVolume = normalisedCurrentBCDVolume + input * inflateSpeed * Time.fixedDeltaTime; // target is unbound ie. may be outside range 0-1
+        normalisedCurrentBCDVolume = Mathf.Clamp01(targetNormalisedVolume); // ensures value is normalised
+    }
+    
+    private void ApplyBuoyancy()
+    {
+        float totalVolume = CurrentBCDVolume + bodyVolume;
         float depth = depthManager.Depth;
         float buoyantForce = waterDensity * totalVolume * gravity;
+        Debug.Log(buoyantForce);
         rb.AddForce(Vector3.up * buoyantForce);
     }
 
@@ -82,10 +103,11 @@ public class PlayerController : MonoBehaviour
         rb.AddRelativeForce(swimInput * swimSpeed); // relative force applies the force according to local rotation
 
     }
-
+    
     private float CalculateBodyVolume()
     {
         // note: this is an estimate
         return bodyMass / 1000f; // in cubic meters
     }
+    
 }
