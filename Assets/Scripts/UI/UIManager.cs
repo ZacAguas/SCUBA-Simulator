@@ -6,7 +6,12 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    private void Start()
+    [SerializeField] private PlayerController playerController;
+    
+    [SerializeField] private Slider bcdSlider;
+
+    private void FixedUpdate()
     {
+        bcdSlider.value = playerController.GetNormalisedCurrentBCDVolume();
     }
 }
